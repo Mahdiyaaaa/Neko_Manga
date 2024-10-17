@@ -25,9 +25,6 @@ class Mangas
     #[ORM\Column(type: Types::TEXT)]
     private ?string $synopsis = null;
 
-    #[ORM\Column]
-    private ?int $total_volumes = null;
-
     #[ORM\Column(length: 255)]
     private ?string $manga_cover = null;
 
@@ -44,16 +41,13 @@ class Mangas
     #[ORM\ManyToMany(targetEntity: MangaGender::class, inversedBy: 'mangas')]
     private Collection $gender;
 
-    /**
-     * @var Collection<int, UserCollec>
-     */
-    #[ORM\OneToMany(targetEntity: UserCollec::class, mappedBy: 'manga', orphanRemoval: true)]
-    private Collection $userCollecs;
+    #[ORM\ManyToOne(inversedBy: 'mangas')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Series $manga_serie = null;
 
     public function __construct()
     {
         $this->gender = new ArrayCollection();
-        $this->userCollecs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -97,17 +91,6 @@ class Mangas
         return $this;
     }
 
-    public function getTotalVolumes(): ?int
-    {
-        return $this->total_volumes;
-    }
-
-    public function setTotalVolumes(int $total_volumes): static
-    {
-        $this->total_volumes = $total_volumes;
-
-        return $this;
-    }
 
     public function getMangaCover(): ?string
     {
@@ -169,32 +152,14 @@ class Mangas
         return $this;
     }
 
-    /**
-     * @return Collection<int, UserCollec>
-     */
-    public function getUserCollecs(): Collection
+    public function getMangaSerie(): ?Series
     {
-        return $this->userCollecs;
+        return $this->manga_serie;
     }
 
-    public function addUserCollec(UserCollec $userCollec): static
+    public function setMangaSerie(?Series $manga_serie): static
     {
-        if (!$this->userCollecs->contains($userCollec)) {
-            $this->userCollecs->add($userCollec);
-            $userCollec->setManga($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserCollec(UserCollec $userCollec): static
-    {
-        if ($this->userCollecs->removeElement($userCollec)) {
-            // set the owning side to null (unless already changed)
-            if ($userCollec->getManga() === $this) {
-                $userCollec->setManga(null);
-            }
-        }
+        $this->manga_serie = $manga_serie;
 
         return $this;
     }

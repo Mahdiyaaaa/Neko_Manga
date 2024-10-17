@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserCollecRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -30,7 +32,7 @@ class UserCollec
 
     #[ORM\ManyToOne(inversedBy: 'userCollecs')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Mangas $manga = null;
+    private ?Series $usercollec_serie = null;
 
     public function getId(): ?int
     {
@@ -85,15 +87,16 @@ class UserCollec
         return $this;
     }
 
-    public function getManga(): ?Mangas
+    public function getUsercollecSerie(): ?Series
     {
-        return $this->manga;
+        return $this->usercollec_serie;
     }
 
-    public function setManga(?Mangas $manga): static
+    public function setUsercollecSerie(?Series $usercollec_serie): static
     {
-        $this->manga = $manga;
+        $this->usercollec_serie = $usercollec_serie;
 
         return $this;
     }
+
 }
